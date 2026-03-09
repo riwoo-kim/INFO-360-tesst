@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Recommendation App</title>
+    <title>Dynamic Recipe Filter</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #f8f8f8;
-            --card-bg: #e9e9e9;
             --list-bg: #eeeeee;
             --accent-black: #000000;
             --recipe-card: #a3a3a3;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #222;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,142 +23,121 @@
             margin: 0;
         }
 
-        /* Phone Container Mockup */
+        /* Mobile Container */
         .phone-frame {
             width: 375px;
             height: 812px;
             background: white;
-            border: 12px solid #1a1a1a;
             border-radius: 40px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header Area */
+        /* Header Styling */
         .header {
             padding: 50px 20px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
+        .header h1 { font-size: 24px; margin: 0; font-weight: 600; }
 
-        .header i { font-size: 20px; cursor: pointer; }
-        .header h1 { font-size: 24px; margin: 0; font-weight: 500; }
-
-        /* Level Selector */
         .level-bar {
             background: var(--accent-black);
-            margin: 15px;
+            margin: 15px 20px;
             padding: 12px 20px;
             border-radius: 15px;
             display: flex;
             align-items: center;
             color: white;
         }
-
         .level-tag {
             background: white;
             color: black;
-            padding: 5px 15px;
+            padding: 4px 12px;
             border-radius: 8px;
             margin-left: 10px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        /* Ingredients Section */
-        .section-title {
-            padding: 0 20px;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .ingredients-container {
+        /* Ingredients List Section */
+        .section-label { padding: 0 25px; font-size: 15px; color: #444; margin-bottom: 8px; }
+        
+        .ingredients-box {
             background: var(--list-bg);
             margin: 0 20px;
             padding: 15px;
             border-radius: 20px;
-            max-height: 250px;
-            overflow-y: auto;
         }
 
         .ingredient-item {
             display: flex;
             align-items: center;
-            padding: 8px 0;
+            padding: 6px 0;
             cursor: pointer;
-            transition: opacity 0.2s;
+            font-size: 15px;
         }
 
         .ingredient-item input {
             width: 18px;
             height: 18px;
             margin-right: 12px;
-            accent-color: #444;
+            cursor: pointer;
         }
 
-        .ingredient-item.unchecked { opacity: 0.5; text-decoration: line-through; }
-
         /* Recommendation Section */
-        .recommendations {
+        .recommendation-container {
             background: var(--list-bg);
             margin: 20px;
             padding: 15px;
             border-radius: 20px;
             flex-grow: 1;
+            transition: all 0.3s ease;
         }
 
         .recipe-card {
             background: var(--recipe-card);
             border-radius: 15px;
             display: flex;
-            padding: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: transform 0.1s;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
         }
 
-        .recipe-card:active { transform: scale(0.98); }
+        /* Class to hide recipes that don't match ingredients */
+        .recipe-card.hidden {
+            opacity: 0;
+            transform: translateY(10px);
+            visibility: hidden;
+            position: absolute; /* Remove from flow so others slide up */
+        }
 
         .recipe-img {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 10px;
             background-size: cover;
-            background-position: center;
         }
 
-        .recipe-info {
-            margin-left: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
+        .recipe-info { margin-left: 15px; }
         .recipe-info h3 { margin: 0; font-size: 16px; }
-        .recipe-info p { margin: 5px 0 0; font-size: 12px; opacity: 0.8; }
+        .recipe-info p { margin: 4px 0 0; font-size: 12px; color: #444; }
 
-        /* Dynamic Notch */
-        .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 30px;
-            background: black;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            z-index: 10;
+        .empty-state {
+            text-align: center;
+            color: #888;
+            padding-top: 40px;
+            display: none;
         }
     </style>
 </head>
 <body>
 
 <div class="phone-frame">
-    <div class="notch"></div>
-    
     <div class="header">
         <i class="fa-solid fa-chevron-left"></i>
         <h1>Recommendation</h1>
@@ -171,49 +149,77 @@
         <div class="level-tag">Beginner</div>
     </div>
 
-    <h2 class="section-title">Ingredients I have</h2>
+    <div class="section-label">Ingredients I have</div>
     
-    <div class="ingredients-container" id="ingredientList">
-        <label class="ingredient-item"><input type="checkbox" checked> Carrot</label>
-        <label class="ingredient-item"><input type="checkbox" checked> Onion</label>
-        <label class="ingredient-item"><input type="checkbox" checked> Tomato</label>
-        <label class="ingredient-item"><input type="checkbox" checked> Pasta</label>
-        <label class="ingredient-item"><input type="checkbox" checked> Water</label>
-        <label class="ingredient-item"><input type="checkbox" checked> Salt</label>
-        <label class="ingredient-item"><input type="checkbox" checked> Soy sauce</label>
+    <div class="ingredients-box">
+        <label class="ingredient-item"><input type="checkbox" id="carrot" checked> Carrot</label>
+        <label class="ingredient-item"><input type="checkbox" id="tomato" checked> Tomato</label>
+        <label class="ingredient-item"><input type="checkbox" id="pasta" checked> Pasta</label>
+        <label class="ingredient-item"><input type="checkbox" id="onion" checked> Onion</label>
     </div>
 
-    <div class="recommendations">
-        <div class="recipe-card" onclick="alert('Opening Tomato Soup Recipe!')">
-            <div class="recipe-img" style="background-image: url('https://images.unsplash.com/photo-1547592110-823eb636c90f?auto=format&fit=crop&w=200&q=80')"></div>
+    <div class="recommendation-container" id="recipeContainer">
+        
+        <div class="recipe-card" data-requires="tomato,onion">
+            <div class="recipe-img" style="background-image: url('https://images.unsplash.com/photo-1547592110-823eb636c90f?w=200')"></div>
             <div class="recipe-info">
                 <h3>Tomato soup</h3>
                 <p>Simple quick and easy!</p>
             </div>
         </div>
 
-        <div class="recipe-card" onclick="alert('Opening Hamburger Recipe!')">
-            <div class="recipe-img" style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=200&q=80')"></div>
+        <div class="recipe-card" data-requires="pasta,tomato">
+            <div class="recipe-img" style="background-image: url('https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=200')"></div>
             <div class="recipe-info">
-                <h3>Hamburger</h3>
+                <h3>Tomato Pasta</h3>
                 <p>Perfect meal for you!</p>
             </div>
         </div>
+
+        <div id="noMatch" class="empty-state">No recipes match your ingredients</div>
     </div>
 </div>
 
 <script>
-    // Add interactivity to checkboxes
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(box => {
-        box.addEventListener('change', function() {
-            if(this.checked) {
-                this.parentElement.classList.remove('unchecked');
+    // Select all ingredient checkboxes and recipe cards
+    const checkboxes = document.querySelectorAll('.ingredient-item input');
+    const recipes = document.querySelectorAll('.recipe-card');
+    const emptyState = document.getElementById('noMatch');
+
+    function updateRecipes() {
+        // Get an array of IDs for all checked ingredients
+        const availableIngredients = Array.from(checkboxes)
+            .filter(i => i.checked)
+            .map(i => i.id);
+
+        let visibleCount = 0;
+
+        recipes.forEach(recipe => {
+            // Get required ingredients for this specific recipe
+            const requirements = recipe.getAttribute('data-requires').split(',');
+            
+            // Check if every requirement is present in the available list
+            const hasAllIngredients = requirements.every(req => availableIngredients.includes(req));
+
+            if (hasAllIngredients) {
+                recipe.classList.remove('hidden');
+                visibleCount++;
             } else {
-                this.parentElement.classList.add('unchecked');
+                recipe.classList.add('hidden');
             }
         });
+
+        // Show "empty" message if no recipes are visible
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // Add event listener to each checkbox to trigger the update
+    checkboxes.forEach(box => {
+        box.addEventListener('change', updateRecipes);
     });
+
+    // Run once on load to set initial state
+    updateRecipes();
 </script>
 
 </body>
