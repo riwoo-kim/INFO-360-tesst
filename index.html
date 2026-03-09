@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Recipe Filter</title>
+    <title>Recipe Recommendation UI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #f8f8f8;
-            --list-bg: #eeeeee;
-            --accent-black: #000000;
-            --recipe-card: #a3a3a3;
+            --bg-white: #ffffff;
+            --container-gray: #f0f0f0; /* The light gray background in your image */
+            --card-gray: #a6a6a6;      /* The darker gray for recipe cards */
+            --text-main: #000000;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-family: -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
             background-color: #222;
             display: flex;
             justify-content: center;
@@ -23,204 +23,214 @@
             margin: 0;
         }
 
-        /* Mobile Container */
+        /* Mobile Frame Styling */
         .phone-frame {
             width: 375px;
             height: 812px;
-            background: white;
-            border-radius: 40px;
+            background: var(--bg-white);
+            border: 10px solid #1a1a1a;
+            border-radius: 45px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
 
-        /* Header Styling */
+        /* Status Bar Simulation */
+        .status-bar {
+            padding: 15px 30px 0;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 30px;
+            background: #000;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        /* Header Layout */
         .header {
-            padding: 50px 20px 10px;
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .header h1 { font-size: 24px; margin: 0; font-weight: 600; }
 
-        .level-bar {
-            background: var(--accent-black);
-            margin: 15px 20px;
+        .header h1 {
+            font-size: 26px;
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+            margin-right: 20px; /* Offset to center text relative to back button */
+        }
+
+        /* "For Beginner" Section */
+        .badge-container {
+            background: #000;
+            margin: 0 20px 20px;
             padding: 12px 20px;
-            border-radius: 15px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             color: white;
+            font-size: 18px;
         }
-        .level-tag {
+
+        .badge {
             background: white;
             color: black;
-            padding: 4px 12px;
-            border-radius: 8px;
+            padding: 4px 14px;
+            border-radius: 10px;
             margin-left: 10px;
-            font-weight: bold;
-            font-size: 13px;
+            font-weight: 500;
         }
 
-        /* Ingredients List Section */
-        .section-label { padding: 0 25px; font-size: 15px; color: #444; margin-bottom: 8px; }
-        
-        .ingredients-box {
-            background: var(--list-bg);
+        /* Ingredients List Area */
+        .section-label {
+            padding-left: 30px;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .ingredients-list {
+            background: var(--container-gray);
             margin: 0 20px;
-            padding: 15px;
-            border-radius: 20px;
+            padding: 20px;
+            border-radius: 25px;
         }
 
-        .ingredient-item {
+        .item {
             display: flex;
             align-items: center;
-            padding: 6px 0;
+            margin-bottom: 8px;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 15px;
         }
 
-        .ingredient-item input {
+        .item input {
+            margin-right: 12px;
             width: 18px;
             height: 18px;
-            margin-right: 12px;
-            cursor: pointer;
+            accent-color: #333;
         }
 
-        /* Recommendation Section */
-        .recommendation-container {
-            background: var(--list-bg);
+        /* Recipe Recommendations Area */
+        .recommendations-container {
+            background: var(--container-gray);
             margin: 20px;
-            padding: 15px;
-            border-radius: 20px;
-            flex-grow: 1;
-            transition: all 0.3s ease;
+            padding: 20px;
+            border-radius: 25px;
+            min-height: 250px;
         }
 
         .recipe-card {
-            background: var(--recipe-card);
-            border-radius: 15px;
+            background: var(--card-gray);
+            border-radius: 20px;
             display: flex;
             padding: 12px;
-            margin-bottom: 12px;
-            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            margin-bottom: 15px;
+            transition: opacity 0.3s ease, transform 0.2s;
         }
 
-        /* Class to hide recipes that don't match ingredients */
         .recipe-card.hidden {
-            opacity: 0;
-            transform: translateY(10px);
-            visibility: hidden;
-            position: absolute; /* Remove from flow so others slide up */
+            display: none;
         }
 
         .recipe-img {
-            width: 70px;
-            height: 70px;
-            border-radius: 10px;
+            width: 85px;
+            height: 85px;
+            border-radius: 5px; /* Slight roundness as seen in image */
             background-size: cover;
+            background-position: center;
         }
 
-        .recipe-info { margin-left: 15px; }
-        .recipe-info h3 { margin: 0; font-size: 16px; }
-        .recipe-info p { margin: 4px 0 0; font-size: 12px; color: #444; }
-
-        .empty-state {
-            text-align: center;
-            color: #888;
-            padding-top: 40px;
-            display: none;
+        .recipe-text {
+            margin-left: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
+
+        .recipe-text h3 { margin: 0; font-size: 17px; }
+        .recipe-text p { margin: 4px 0 0; font-size: 13px; color: #333; }
+
     </style>
 </head>
 <body>
 
 <div class="phone-frame">
+    <div class="notch"></div>
+    <div class="status-bar">
+        <span>9:41</span>
+        <div>
+            <i class="fa-solid fa-signal"></i>
+            <i class="fa-solid fa-wifi"></i>
+            <i class="fa-solid fa-battery-full"></i>
+        </div>
+    </div>
+    
     <div class="header">
         <i class="fa-solid fa-chevron-left"></i>
         <h1>Recommendation</h1>
         <i class="fa-solid fa-bars"></i>
     </div>
 
-    <div class="level-bar">
-        <span>For</span>
-        <div class="level-tag">Beginner</div>
+    <div class="badge-container">
+        For <span class="badge">Beginner</span>
     </div>
 
     <div class="section-label">Ingredients I have</div>
     
-    <div class="ingredients-box">
-        <label class="ingredient-item"><input type="checkbox" id="carrot" checked> Carrot</label>
-        <label class="ingredient-item"><input type="checkbox" id="tomato" checked> Tomato</label>
-        <label class="ingredient-item"><input type="checkbox" id="pasta" checked> Pasta</label>
-        <label class="ingredient-item"><input type="checkbox" id="onion" checked> Onion</label>
+    <div class="ingredients-list">
+        <label class="item"><input type="checkbox" data-ing="carrot" checked> Carrot</label>
+        <label class="item"><input type="checkbox" data-ing="onion" checked> Onion</label>
+        <label class="item"><input type="checkbox" data-ing="tomato" checked> Tomato</label>
+        <label class="item"><input type="checkbox" data-ing="pasta" checked> Pasta</label>
+        <label class="item"><input type="checkbox" data-ing="water" checked> Water</label>
+        <label class="item"><input type="checkbox" data-ing="salt" checked> Salt</label>
+        <label class="item"><input type="checkbox" data-ing="soy" checked> Soy sauce</label>
     </div>
 
-    <div class="recommendation-container" id="recipeContainer">
-        
-        <div class="recipe-card" data-requires="tomato,onion">
+    <div class="recommendations-container" id="recipeList">
+        <div class="recipe-card" data-req="tomato,water,salt">
             <div class="recipe-img" style="background-image: url('https://images.unsplash.com/photo-1547592110-823eb636c90f?w=200')"></div>
-            <div class="recipe-info">
+            <div class="recipe-text">
                 <h3>Tomato soup</h3>
                 <p>Simple quick and easy!</p>
             </div>
         </div>
 
-        <div class="recipe-card" data-requires="pasta,tomato">
-            <div class="recipe-img" style="background-image: url('https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=200')"></div>
-            <div class="recipe-info">
-                <h3>Tomato Pasta</h3>
+        <div class="recipe-card" data-req="onion">
+            <div class="recipe-img" style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200')"></div>
+            <div class="recipe-text">
+                <h3>Hamburger</h3>
                 <p>Perfect meal for you!</p>
             </div>
         </div>
-
-        <div id="noMatch" class="empty-state">No recipes match your ingredients</div>
     </div>
 </div>
 
 <script>
-    // Select all ingredient checkboxes and recipe cards
-    const checkboxes = document.querySelectorAll('.ingredient-item input');
+    // Get all checkboxes and recipe cards
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     const recipes = document.querySelectorAll('.recipe-card');
-    const emptyState = document.getElementById('noMatch');
 
     function updateRecipes() {
-        // Get an array of IDs for all checked ingredients
-        const availableIngredients = Array.from(checkboxes)
+        // Create an array of currently checked ingredient keys
+        const activeIngredients = Array.from(checkboxes)
             .filter(i => i.checked)
-            .map(i => i.id);
-
-        let visibleCount = 0;
+            .map(i => i.getAttribute('data-ing'));
 
         recipes.forEach(recipe => {
-            // Get required ingredients for this specific recipe
-            const requirements = recipe.getAttribute('data-requires').split(',');
+            // Get required ingredients for this specific recipe from data attribute
+            const required = recipe.getAttribute('data-req').split(',');
             
-            // Check if every requirement is present in the available list
-            const hasAllIngredients = requirements.every(req => availableIngredients.includes(req));
-
-            if (hasAllIngredients) {
-                recipe.classList.remove('hidden');
-                visibleCount++;
-            } else {
-                recipe.classList.add('hidden');
-            }
-        });
-
-        // Show "empty" message if no recipes are visible
-        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
-    }
-
-    // Add event listener to each checkbox to trigger the update
-    checkboxes.forEach(box => {
-        box.addEventListener('change', updateRecipes);
-    });
-
-    // Run once on load to set initial state
-    updateRecipes();
-</script>
-
-</body>
-</html>
+            // Check if ALL required ingredients are currently
