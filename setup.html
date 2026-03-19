@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen App Prototype</title>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 375px;
+            height: 812px;
+            background-color: white;
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hide sections by default */
+        section { display: none; padding: 20px; flex-grow: 1; }
+        section.active { display: flex; flex-direction: column; }
+
+        /* Login Styles */
+        #login-page { justify-content: center; background: linear-gradient(135deg, #bbeeff 0%, #77ccff 100%); }
+        .login-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-black { background: #333; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 10px; }
+
+        /* Setup Page Styles */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+        .level-box { background: black; color: white; border-radius: 20px; padding: 20px; margin: 15px 0; }
+        .level-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .level-btn { background: white; border: none; padding: 8px 15px; border-radius: 12px; font-size: 12px; cursor: pointer; flex: 1; color: black; }
+        .level-btn.selected { background: #77ccff; font-weight: bold; }
+
+        .checklist-section { margin-top: 20px; }
+        .list-container { background: #f0f0f0; border-radius: 15px; padding: 15px; margin-top: 10px; }
+        .check-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; }
+        .check-item input { margin-right: 10px; width: 18px; height: 18px; accent-color: #333; }
+
+        /* Home Styles (The screen after setup) */
+        #home-page { justify-content: center; align-items: center; background: #f9f9f9; }
+
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <section id="login-page" class="active">
+            <div class="login-card">
+                <h1 style="text-align: center;">Welcome!</h1>
+                <input type="text" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box;">
+                <input type="password" placeholder="Password" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box;">
+                <button class="btn-black" onclick="handleLogin()">Sign In</button>
+            </div>
+        </section>
+
+        <section id="setup-page">
+            <div class="header">
+                <span>&lt;</span>
+                <h2 style="font-size: 18px; margin: 0;">Set Your Kitchen</h2>
+                <span>☰</span>
+            </div>
+
+            <div class="level-box">
+                <p style="margin: 0; font-size: 14px;">What's your level?</p>
+                <div class="level-buttons">
+                    <button class="level-btn" onclick="selectLevel(this)">Beginner</button>
+                    <button class="level-btn" onclick="selectLevel(this)">Intermediate</button>
+                    <button class="level-btn" onclick="selectLevel(this)">Advanced</button>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <p style="font-weight: bold; margin: 0;">Tool Checklist</p>
+                <div class="list-container" id="tools">
+                    <label class="check-item"><input type="checkbox" checked> Pot</label>
+                    <label class="check-item"><input type="checkbox" checked> Knife</label>
+                    <label class="check-item"><input type="checkbox" checked> Pan</label>
+                </div>
+            </div>
+
+            <div class="checklist-section">
+                <p style="font-weight: bold; margin: 0; margin-top: 15px;">Ingredients Checklist</p>
+                <div class="list-container">
+                    <label class="check-item"><input type="checkbox" checked> Carrot</label>
+                    <label class="check-item"><input type="checkbox" checked> Onion</label>
+                    <label class="check-item"><input type="checkbox" checked> Salt</label>
+                </div>
+            </div>
+
+            <button class="btn-black" style="margin-top: 20px;" onclick="completeSetup()">Finish Setup</button>
+        </section>
+
+        <section id="home-page">
+            <h2>🏠 Home Screen</h2>
+            <p>Setup is complete!</p>
+            <button onclick="resetApp()" style="font-size: 10px; color: gray; background: none; border: none; text-decoration: underline;">Reset App (For Testing)</button>
+        </section>
+    </div>
+
+    <script>
+        // Check if user has already completed setup on load
+        window.onload = function() {
+            const isSetupComplete = localStorage.getItem('setupDone');
+            // If they are already logged in and setup is done, you could skip to home.
+            // But for this prototype, we'll start at login.
+        };
+
+        function showPage(pageId) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function handleLogin() {
+            const isSetupComplete = localStorage.getItem('setupDone');
+            
+            // Logic: If setup is done, go to Home. If not, go to Setup.
+            if (isSetupComplete === 'true') {
+                showPage('home-page');
+            } else {
+                showPage('setup-page');
+            }
+        }
+
+        function selectLevel(btn) {
+            document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+
+        function completeSetup() {
+            // Save setup status to localStorage
+            localStorage.setItem('setupDone', 'true');
+            alert("Setup Saved!");
+            showPage('home-page');
+        }
+
+        function resetApp() {
+            // Helper function for you to test the "first time" flow again
+            localStorage.removeItem('setupDone');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
