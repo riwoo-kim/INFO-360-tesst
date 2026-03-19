@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Kitchen App</title>
+    <style>
+        /* Base styles to mimic mobile app (Shared structure) */
+        body {
+            font-family: -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .iphone-container {
+            width: 375px;
+            height: 812px;
+            background-color: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Bar */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 20px 10px;
+            background-color: white;
+            z-index: 10;
+        }
+
+        .header-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* Main Content Area */
+        .content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            justify-content: center; /* Center the grey box */
+        }
+
+        /* Large Grey Box from design */
+        .profile-box {
+            background-color: #e5e5e5;
+            width: 100%;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Space between input sections */
+        }
+
+        /* Input Grouping */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        /* Standard Text Input */
+        .text-input {
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            height: 35px;
+            padding: 0 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Cooking Skill Buttons */
+        .skill-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .skill-btn {
+            background-color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            color: black;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        /* Design for the selected skill */
+        .skill-btn.selected {
+            background-color: black;
+            color: white;
+        }
+
+        /* Inline Input Group (Value + Unit) */
+        .inline-inputs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Small number inputs for minutes/dollars */
+        .small-input {
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            height: 35px;
+            width: 60px;
+            text-align: center;
+            padding: 0;
+        }
+
+        /* Styled Dropdown */
+        .unit-select {
+            background-color: white;
+            border: none;
+            border-radius: 8px;
+            height: 35px;
+            padding: 0 10px;
+            cursor: pointer;
+            color: #333;
+            appearance: none; /* Hide default arrow */
+            -webkit-appearance: none;
+        }
+        
+        /* Optional: Add a custom arrow if needed for the dropdown */
+
+    </style>
+</head>
+<body>
+
+    <div class="iphone-container">
+        <header class="header">
+            <span class="header-icon">&lt;</span> <h1>Profile</h1>
+            <span class="header-icon">☰</span> </header>
+
+        <main class="content">
+            <div class="profile-box">
+                <div class="input-group">
+                    <label class="input-label" for="profileName">Name</label>
+                    <input type="text" id="profileName" class="text-input" placeholder="Your name">
+                </div>
+
+                <div class="input-group">
+                    <p class="input-label">Cooking Skill</p>
+                    <div class="skill-options">
+                        <button class="skill-btn" onclick="selectSkill(this)">Beginner</button>
+                        <button class="skill-btn" onclick="selectSkill(this)">Intermediate</button>
+                        <button class="skill-btn selected" onclick="selectSkill(this)">Advanced</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="mealTime">How long are your meals?</label>
+                    <div class="inline-inputs">
+                        <input type="number" id="mealTime" class="small-input" placeholder="0">
+                        <select class="unit-select">
+                            <option>minutes</option>
+                            <option>hours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" for="mealBudget">What is your budget for a meal?</label>
+                    <div class="inline-inputs">
+                        <input type="number" id="mealBudget" class="small-input" placeholder="0">
+                        <select class="unit-select">
+                            <option>$</option>
+                            <option>₩</option>
+                            <option>€</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Function to handle Cooking Skill button selection
+        function selectSkill(clickedBtn) {
+            // Find all buttons in the same group
+            const buttons = clickedBtn.parentElement.querySelectorAll('.skill-btn');
+            
+            // Remove 'selected' class from all buttons
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            
+            // Add 'selected' class to the clicked button
+            clickedBtn.classList.add('selected');
+        }
+    </script>
+</body>
+</html>
