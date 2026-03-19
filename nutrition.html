@@ -22,7 +22,33 @@
         .nutrient-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .nutrient-val { background: white; color: black; border-radius: 15px; padding: 5px 15px; min-width: 80px; text-align: center; font-size: 14px; font-weight: bold; }
     </style>
-    <script src="script.js"></script>
-</body>
 </head>
 <body>
+    <div class="iphone-container">
+        <header class="header">
+            <span style="cursor:pointer;">&lt;</span>
+            <h1 style="font-size: 18px; margin:0;">Nutrition Tracker</h1>
+            <span style="cursor:pointer;">☰</span>
+        </header>
+
+        <div class="chart-box">
+            <div class="y-axis-label">%DV</div>
+            <div class="bar" style="height: 150px;"><span class="bar-label">Calories</span></div>
+            <div class="bar" style="height: 150px;"><span class="bar-label">Carbohydrates</span></div>
+            <div class="bar" style="height: 160px;"><span class="bar-label">Protein</span></div>
+            <div class="bar" style="height: 150px;"><span class="bar-label">Fat</span></div>
+            <div class="bar" style="height: 150px;"><span class="bar-label">Fiber</span></div>
+        </div>
+
+        <button class="btn-add-manual" onclick="location.href='manual.html'">Add Manually</button>
+
+        <div class="summary-card">
+            <div class="nutrient-row"><span>Calories</span> <div class="nutrient-val">1500 kcal</div></div>
+            <div class="nutrient-row"><span>Carbohydrates</span> <div class="nutrient-val">70g</div></div>
+            <div class="nutrient-row"><span>Protein</span> <div class="nutrient-val">50g</div></div>
+            <div class="nutrient-row"><span>Fat</span> <div class="nutrient-val">20g</div></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
