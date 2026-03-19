@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Input</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; margin: 0; display: flex; justify-content: center; background-color: #f0f0f0; }
+        .iphone-container { width: 375px; height: 812px; background-color: white; border-radius: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; overflow-y: auto; padding: 50px 20px 20px; box-sizing: border-box; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+
+        .input-card { background: black; color: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        .add-meal-title { display: flex; align-items: center; gap: 10px; font-weight: bold; margin-bottom: 20px; }
+        
+        .nutrient-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        /* Using input for interactivity */
+        .nutrient-input { background: white; border: none; border-radius: 15px; padding: 5px 15px; width: 100px; text-align: center; font-size: 14px; font-weight: bold; }
+
+        .btn-scan { background: black; color: white; border: none; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-size: 14px; margin-bottom: 20px; }
+
+        /* Camera Placeholder */
+        .camera-box { background: #eee; border-radius: 20px; height: 300px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .camera-icon { font-size: 50px; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="iphone-container">
+        <header class="header">
+            <span style="cursor:pointer;" onclick="history.back()">&lt;</span>
+            <h1 style="font-size: 18px; margin:0;">Manual Input</h1>
+            <span style="cursor:pointer;">☰</span>
+        </header>
+
+        <div class="input-card">
+            <div class="add-meal-title">
+                <span style="border: 2px solid white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center;">+</span>
+                Add Meal
+            </div>
+            <div class="nutrient-row"><span>Calories</span> <input type="text" class="nutrient-input" value="1500 kcal"></div>
+            <div class="nutrient-row"><span>Carbohydrates</span> <input type="text" class="nutrient-input" value="70g"></div>
+            <div class="nutrient-row"><span>Protein</span> <input type="text" class="nutrient-input" value="50g"></div>
+            <div class="nutrient-row"><span>Fat</span> <input type="text" class="nutrient-input" value="20g"></div>
+        </div>
+
+        <button class="btn-scan">Scan Meal</button>
+
+        <div class="camera-box">
+            <div class="camera-icon">📷</div>
+        </div>
+    </div>
+</body>
+</html>
