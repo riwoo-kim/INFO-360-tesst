@@ -19,7 +19,8 @@
         .check-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 14px; }
 
         /* Recipe Cards */
-        .recipe-card { background: #999; border-radius: 20px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; color: #333; }
+        .recipe-card { background: #bbb; border-radius: 20px; padding: 15px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; color: #333; transition: transform 0.2s; }
+        .recipe-card:hover { transform: scale(1.02); }
         .recipe-card img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; }
         .recipe-info h3 { margin: 0; font-size: 16px; }
         .recipe-info p { margin: 5px 0 0; font-size: 12px; }
@@ -28,9 +29,9 @@
 <body>
     <div class="iphone-container">
         <header class="header">
-            <span class="back-btn">&lt;</span>
+            <span class="back-btn" onclick="goBack()">&lt;</span>
             <h1 style="font-size: 20px; margin:0;">Recommendation</h1>
-            <span class="menu-btn" onclick="location.href='history.html'">☰</span>
+            <span class="menu-btn" onclick="toggleMenu()">☰</span>
         </header>
 
         <div class="level-badge">
@@ -46,15 +47,16 @@
             <label class="check-item"><input type="checkbox" checked> Pasta</label>
         </div>
 
-        <div class="recipe-card">
-            <img src="https://via.placeholder.com/70" alt="Tomato soup">
+        <div class="recipe-card" onclick="goToPage('history.html')">
+            <img src="https://images.unsplash.com/photo-1547592166-23ac45744acd?q=80&w=200" alt="Tomato soup">
             <div class="recipe-info">
                 <h3>Tomato soup</h3>
                 <p>Simple quick and easy!</p>
             </div>
         </div>
-        <div class="recipe-card">
-            <img src="https://via.placeholder.com/70" alt="Hamburger">
+
+        <div class="recipe-card" onclick="goToPage('history.html')">
+            <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?q=80&w=200" alt="Hamburger">
             <div class="recipe-info">
                 <h3>Hamburger</h3>
                 <p>Perfect meal for you!</p>
