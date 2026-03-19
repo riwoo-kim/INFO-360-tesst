@@ -212,17 +212,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Get references to elements
+            // Get references to the button and the name input
             var signInBtn = document.getElementById('signin-btn');
-            var loginPage = document.getElementById('login-page');
-            var nextPage = document.getElementById('next-page');
+            var emailInput = document.getElementById('email');
 
-            // Add click event listener to the Sign In button
+            // This event runs when the Sign In button is clicked
             signInBtn.addEventListener('click', function () {
-                // To simulate a successful login, hide the login page
-                // and show the next page using CSS classes.
-                loginPage.style.display = 'none'; // Hide login form
-                nextPage.classList.add('active'); // Show next page (fade in animation)
+                // 1. Save the name entered by the user
+                if (emailInput && emailInput.value) {
+                    localStorage.setItem('userName', emailInput.value);
+                }
+
+                // 2. Check if the user has already finished the setup
+                const isSetupComplete = localStorage.getItem('setupDone');
+
+                if (isSetupComplete === 'true') {
+                    // If already done, go directly to the main page file
+                    window.location.href = 'main.html';
+                } else {
+                    // If it's the first time, go to the setup page file
+                    window.location.href = 'setup.html';
+                }
             });
         });
     </script>
