@@ -147,17 +147,16 @@
             -webkit-appearance: none;
         }
         
-        /* Optional: Add a custom arrow if needed for the dropdown */
-
     </style>
 </head>
 <body>
 
     <div class="iphone-container">
         <header class="header">
-            <span class="header-icon">&lt;</span> <h1>Profile</h1>
-            <span class="header-icon">☰</span> </header>
-
+            <span class="header-icon" onclick="goBack()" style="cursor:pointer;">&lt;</span> 
+            <h1>Profile</h1>
+            <span class="header-icon" onclick="toggleMenu()">☰</span>
+        </header>
         <main class="content">
             <div class="profile-box">
                 <div class="input-group">
@@ -197,20 +196,16 @@
                     </div>
                 </div>
 
+                <button class="skill-btn" onclick="saveProfile()" style="background:black; color:white; width:100%; margin-top:20px; font-weight:bold; height:45px;">Save Profile</button>
+
             </div>
         </main>
     </div>
 
     <script>
-        // Function to handle Cooking Skill button selection
         function selectSkill(clickedBtn) {
-            // Find all buttons in the same group
             const buttons = clickedBtn.parentElement.querySelectorAll('.skill-btn');
-            
-            // Remove 'selected' class from all buttons
             buttons.forEach(btn => btn.classList.remove('selected'));
-            
-            // Add 'selected' class to the clicked button
             clickedBtn.classList.add('selected');
         }
     </script>
