@@ -144,14 +144,15 @@
     <div class="iphone-container">
         <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-        <nav class="side-menu" id="sideMenu">
-            <div class="menu-btn" onclick="toggleMenu()" style="top: 20px; right: 20px;">☰</div>
-            <div style="margin-top: 60px;">
-                <a href="#" class="menu-item"><span class="icon">👤</span> Profile</a>
-                <a href="#" class="menu-item"><span class="icon">😊</span> Nutrition</a>
-                <a href="#" class="menu-item"><span class="icon">✔</span> Recommendation</a>
-            </div>
-        </nav>
+    <nav class="side-menu" id="sideMenu">
+        <div class="menu-btn" onclick="toggleMenu()" style="padding: 20px; text-align: right;">✕</div>
+    
+        <div style="margin-top: 20px;">
+            <a href="#" class="menu-item" onclick="goToPage('profile.html')"><span class="icon">👤</span> Profile</a>
+            <a href="#" class="menu-item" onclick="goToPage('nutirtion.html')"><span class="icon">😊</span> Nutrition</a>
+            <a href="#" class="menu-item" onclick="goToPage('reco.html')"><span class="icon">✔</span> Recommendation</a>
+        </div>
+    </nav>
 
         <header class="header">
             <h1>Main</h1>
