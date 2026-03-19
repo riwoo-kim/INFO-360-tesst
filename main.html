@@ -3,206 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitchen App - Main Home</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Main Page - Kitchen App</title>
     <style>
-        /* Home-specific styles */
-        
-        /* Header section with back button and menu */
-        .home-header {
+        /* Base styles to mimic mobile app */
+        body {
+            font-family: -apple-system, sans-serif;
+            margin: 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 10px 20px;
-            margin-top: 10px;
+            min-height: 100vh;
+            background-color: #f0f0f0;
         }
 
-        .header-title {
-            font-size: 20px;
-            font-weight: bold;
+        .iphone-container {
+            width: 375px;
+            height: 812px;
+            background-color: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden; /* Clips the side menu when closed */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar */
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px 10px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 24px;
             margin: 0;
         }
 
-        .menu-icon {
-            font-size: 24px;
+        .menu-btn {
+            position: absolute;
+            right: 25px;
+            font-size: 28px;
             cursor: pointer;
-            color: #333;
-            z-index: 1001; /* Stay above the menu overlay */
+            z-index: 100;
         }
 
-        /* Greeting and info boxes from image_2.png */
-        .home-content {
+        /* Main Content */
+        .content {
             padding: 20px;
+            flex-grow: 1;
         }
 
-        .greeting-text {
-            font-size: 32px;
+        .greeting {
+            font-size: 36px;
             font-weight: bold;
-            margin-bottom: 30px;
+            margin: 20px 0 40px;
         }
 
-        .info-box {
+        /* Black Cards from design */
+        .card {
             background-color: black;
             color: white;
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .info-title {
+        .card-title {
             font-size: 16px;
-            margin: 0 0 10px 0;
+            margin: 0;
         }
 
-        .info-value-placeholder {
+        .card-input-box {
             background-color: white;
-            height: 30px;
-            border-radius: 8px;
-            margin-top: 5px;
+            height: 35px;
+            border-radius: 10px;
+            width: 100%;
         }
 
-        /* Side Menu (Hamburger Menu) from image_3.png */
-        .side-menu {
-            position: absolute;
-            top: 0;
-            right: -300px; /* Hidden by default off-screen to the right */
-            width: 280px;
-            height: 100%;
-            background-color: #f0f0f0;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            transition: right 0.3s ease-in-out; /* Smooth slide animation */
-            z-index: 1000;
-            padding: 60px 20px 20px 20px; /* Top padding to lower items under status bar */
-            box-sizing: border-box;
-            border-top-right-radius: 40px; /* Match phone corners */
-            border-bottom-right-radius: 40px;
-        }
-
-        .side-menu.active {
-            right: 0; /* Slide in when active */
-        }
-
-        /* Menu Overlay (optional dimmed background when menu is open) */
-        .menu-overlay {
+        /* Slide Menu Overlay */
+        .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.4);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-            z-index: 999;
+            background: rgba(0,0,0,0.3);
+            display: none; /* Hidden by default */
+            z-index: 50;
         }
 
-        .menu-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
+        /* Side Menu Drawer */
+        .side-menu {
+            position: absolute;
+            top: 40px; /* Slight margin from top bezel */
+            right: -280px; /* Hidden position */
+            width: 250px;
+            height: 730px; /* Fits inside the phone frame */
+            background-color: #e5e5e5;
+            border-radius: 20px 0 0 20px;
+            transition: right 0.3s ease-in-out;
+            z-index: 101;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        /* Menu Item styles from image_3.png */
+        .side-menu.open {
+            right: 0;
+        }
+
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 15px 0;
+            padding: 15px 10px;
+            font-size: 18px;
             color: #333;
             text-decoration: none;
-            font-size: 16px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #ccc;
         }
 
         .menu-item:last-child {
             border-bottom: none;
         }
 
-        .menu-icon-placeholder {
-            font-size: 18px;
+        .icon {
             margin-right: 15px;
-            width: 20px;
-            text-align: center;
+            font-size: 22px;
         }
 
     </style>
 </head>
 <body>
 
-    <div class="mobile-container">
-        <div class="status-bar-spacer"></div>
+    <div class="iphone-container">
+        <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
-        <header class="home-header">
-            <span class="back-arrow">&lt;</span>
-            <h1 class="header-title">Main</h1>
-            <span class="menu-icon" onclick="toggleMenu()">☰</span>
-        </header>
-
-        <main class="home-content">
-            <p class="greeting-text">Hi <span id="user-name">[NAME]</span>!</p>
-
-            <div class="info-box">
-                <p class="info-title">What did you eat today?</p>
-                <div class="info-value-placeholder"></div>
+        <nav class="side-menu" id="sideMenu">
+            <div class="menu-btn" onclick="toggleMenu()" style="top: 20px; right: 20px;">☰</div>
+            <div style="margin-top: 60px;">
+                <a href="#" class="menu-item"><span class="icon">👤</span> Profile</a>
+                <a href="#" class="menu-item"><span class="icon">😊</span> Nutrition</a>
+                <a href="#" class="menu-item"><span class="icon">✔</span> Recommendation</a>
             </div>
-
-            <div class="info-box">
-                <p class="info-title">How about this menu?</p>
-                <div class="info-value-placeholder"></div>
-            </div>
-
-            <div class="info-box">
-                <p class="info-title">You need more ...</p>
-                <div class="info-value-placeholder"></div>
-            </div>
-        </main>
-
-        <div class="menu-overlay" id="menu-overlay" onclick="toggleMenu()"></div>
-
-        <nav class="side-menu" id="side-menu">
-            <span class="menu-icon" style="position: absolute; top: 15px; right: 20px;" onclick="toggleMenu()">☰</span>
-            
-            <a href="profile.html" class="menu-item">
-                <span class="menu-icon-placeholder">👤</span> Profile
-            </a>
-            <a href="nutrition.html" class="menu-item">
-                <span class="menu-icon-placeholder">😊</span> Nutrition
-            </a>
-            <a href="recommend.html" class="menu-item">
-                <span class="menu-icon-placeholder">✔</span> Recommendation
-            </a>
-            <button onclick="resetSetup()" style="font-size: 10px; color: gray; background: none; border: none; text-decoration: underline; margin-top: 20px; padding: 0;">Reset Setup (Test)</button>
         </nav>
 
+        <header class="header">
+            <h1>Main</h1>
+            <div class="menu-btn" onclick="toggleMenu()">☰</div>
+        </header>
+
+        <main class="content">
+            <div class="greeting">Hi [NAME]!</div>
+
+            <div class="card">
+                <p class="card-title">What did you eat today?</p>
+                <div class="card-input-box"></div>
+            </div>
+
+            <div class="card">
+                <p class="card-title">How about this menu?</p>
+                <div class="card-input-box"></div>
+            </div>
+
+            <div class="card">
+                <p class="card-title">You need more ...</p>
+                <div class="card-input-box"></div>
+            </div>
+        </main>
     </div>
 
-    <script src="script.js"></script>
     <script>
-        // Page-specific JavaScript
-
-        // 1. Data Connection: Get the username stored during login
-        window.onload = function() {
-            // Check if a name was stored (you need to add this logic to index.html)
-            const storedName = localStorage.getItem('userName');
-            if (storedName) {
-                document.getElementById('user-name').innerText = storedName;
+        // Function to open and close the side menu
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            
+            // Toggle classes to animate
+            menu.classList.toggle('open');
+            
+            // Show/hide overlay
+            if (menu.classList.contains('open')) {
+                overlay.style.display = 'block';
             } else {
-                document.getElementById('user-name').innerText = 'User'; // Default
+                overlay.style.display = 'none';
             }
-
-            // Check if Setup was completed (Safety check)
-            if (localStorage.getItem('setupDone') !== 'true') {
-                // If not, redirect back to setup (or login if setup page doesn't exist yet)
-                // location.href = 'setup.html'; 
-            }
-        };
-
-        // 2. Clear stored data for testing the first setup flow again
-        function resetSetup() {
-            localStorage.removeItem('setupDone');
-            localStorage.removeItem('userName');
-            alert("Setup and Name reset. Go back to login.");
-            location.href = 'index.html'; // Go back to the login screen
         }
-
     </script>
 </body>
 </html>
