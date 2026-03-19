@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen App - Main Home</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Home-specific styles */
+        
+        /* Header section with back button and menu */
+        .home-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+            z-index: 1001; /* Stay above the menu overlay */
+        }
+
+        /* Greeting and info boxes from image_2.png */
+        .home-content {
+            padding: 20px;
+        }
+
+        .greeting-text {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background-color: black;
+            color: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            margin: 0 0 10px 0;
+        }
+
+        .info-value-placeholder {
+            background-color: white;
+            height: 30px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        /* Side Menu (Hamburger Menu) from image_3.png */
+        .side-menu {
+            position: absolute;
+            top: 0;
+            right: -300px; /* Hidden by default off-screen to the right */
+            width: 280px;
+            height: 100%;
+            background-color: #f0f0f0;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: right 0.3s ease-in-out; /* Smooth slide animation */
+            z-index: 1000;
+            padding: 60px 20px 20px 20px; /* Top padding to lower items under status bar */
+            box-sizing: border-box;
+            border-top-right-radius: 40px; /* Match phone corners */
+            border-bottom-right-radius: 40px;
+        }
+
+        .side-menu.active {
+            right: 0; /* Slide in when active */
+        }
+
+        /* Menu Overlay (optional dimmed background when menu is open) */
+        .menu-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 999;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Menu Item styles from image_3.png */
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-icon-placeholder {
+            font-size: 18px;
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <div class="status-bar-spacer"></div>
+
+        <header class="home-header">
+            <span class="back-arrow">&lt;</span>
+            <h1 class="header-title">Main</h1>
+            <span class="menu-icon" onclick="toggleMenu()">☰</span>
+        </header>
+
+        <main class="home-content">
+            <p class="greeting-text">Hi <span id="user-name">[NAME]</span>!</p>
+
+            <div class="info-box">
+                <p class="info-title">What did you eat today?</p>
+                <div class="info-value-placeholder"></div>
+            </div>
+
+            <div class="info-box">
+                <p class="info-title">How about this menu?</p>
+                <div class="info-value-placeholder"></div>
+            </div>
+
+            <div class="info-box">
+                <p class="info-title">You need more ...</p>
+                <div class="info-value-placeholder"></div>
+            </div>
+        </main>
+
+        <div class="menu-overlay" id="menu-overlay" onclick="toggleMenu()"></div>
+
+        <nav class="side-menu" id="side-menu">
+            <span class="menu-icon" style="position: absolute; top: 15px; right: 20px;" onclick="toggleMenu()">☰</span>
+            
+            <a href="profile.html" class="menu-item">
+                <span class="menu-icon-placeholder">👤</span> Profile
+            </a>
+            <a href="nutrition.html" class="menu-item">
+                <span class="menu-icon-placeholder">😊</span> Nutrition
+            </a>
+            <a href="recommend.html" class="menu-item">
+                <span class="menu-icon-placeholder">✔</span> Recommendation
+            </a>
+            <button onclick="resetSetup()" style="font-size: 10px; color: gray; background: none; border: none; text-decoration: underline; margin-top: 20px; padding: 0;">Reset Setup (Test)</button>
+        </nav>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Page-specific JavaScript
+
+        // 1. Data Connection: Get the username stored during login
+        window.onload = function() {
+            // Check if a name was stored (you need to add this logic to index.html)
+            const storedName = localStorage.getItem('userName');
+            if (storedName) {
+                document.getElementById('user-name').innerText = storedName;
+            } else {
+                document.getElementById('user-name').innerText = 'User'; // Default
+            }
+
+            // Check if Setup was completed (Safety check)
+            if (localStorage.getItem('setupDone') !== 'true') {
+                // If not, redirect back to setup (or login if setup page doesn't exist yet)
+                // location.href = 'setup.html'; 
+            }
+        };
+
+        // 2. Clear stored data for testing the first setup flow again
+        function resetSetup() {
+            localStorage.removeItem('setupDone');
+            localStorage.removeItem('userName');
+            alert("Setup and Name reset. Go back to login.");
+            location.href = 'index.html'; // Go back to the login screen
+        }
+
+    </script>
+</body>
+</html>
